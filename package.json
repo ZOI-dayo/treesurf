@@ -1,0 +1,23 @@
+{
+  "name": "treesurf",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZOI-dayo/treesurf.git"
+  },
+  "author": "ZOI_dayo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ZOI-dayo/treesurf/issues"
+  },
+  "homepage": "https://github.com/ZOI-dayo/treesurf#readme",
+  "devDependencies": {
+    "electron": "^23.2.0"
+  }
+}
