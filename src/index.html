@@ -5,6 +5,19 @@
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
+    <div id="bar">
+      <input id="url" type="text"></textarea>
+    </div>
     <webview id="main_view" src="https://www.google.com/"></webview>
+
+    <script>
+      const url_input = document.getElementById("url");
+      const webview = document.getElementById("main_view");
+      url_input.addEventListener('change', (e) => {
+        console.log(e);
+        console.log(main_view);
+        main_view.loadURL(e.target.value)
+      });
+    </script>
   </body>
 </html>
