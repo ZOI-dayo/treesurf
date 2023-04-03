@@ -21,21 +21,24 @@ electron_1.app.on('ready', async () => {
             contextIsolation: false,
             preload: (0, path_1.join)(__dirname, 'preload.js'),
         },
+        useContentSize: true,
     });
-    const url = electron_is_dev_1.default
-        ? 'http://localhost:8000/'
-        : (0, url_1.format)({
-            pathname: (0, path_1.join)(__dirname, '../renderer/out/index.html'),
-            protocol: 'file:',
-            slashes: true,
-        });
+    const url = electron_is_dev_1.default ? 'http://localhost:8000/' : (0, url_1.format)({
+        pathname: (0, path_1.join)(__dirname, '../renderer/out/index.html'),
+        protocol: 'file:',
+        slashes: true,
+    });
     const view = new electron_1.BrowserView();
+    // view.setAutoResize({width: true, height: true});
     mainWindow.setBrowserView(view);
-    view.setBounds({ x: 0, y: 40, width: 800, height: 500 });
+    view.setBounds({ x: 0, y: 40, width: 800, height: 560 });
     view.webContents.loadURL('https://electronjs.org');
+    mainWindow.on('resize', () => {
+        view.setBounds({ x: 0, y: 40, width: mainWindow.getBounds().width, height: mainWindow.getBounds().height - 40 });
+    });
     mainWindow.loadURL(url);
     // let client;
-    electron_1.ipcMain.on('urlChange', (_, message) => {
+    electron_1.ipcMain.on('url-change', (_, message) => {
         console.log(message);
         view.webContents.loadURL(message);
         console.log(view.webContents.getURL());
@@ -48,6 +51,12 @@ electron_1.app.on('ready', async () => {
         console.log(description);
         // client.send('message', description)
         mainWindow.webContents.send('message', description);
+    });
+    view.webContents.on('did-finish-load', () => {
+        mainWindow.webContents.send('url-change', view.webContents.getURL());
+    });
+    view.webContents.on('update-target-url', () => {
+        mainWindow.webContents.send('url-change', view.webContents.getURL());
     });
 });
 // Quit the app once all windows are closed

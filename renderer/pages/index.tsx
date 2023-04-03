@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Layout from '../components/Layout'
 
@@ -8,9 +8,11 @@ const IndexPage = () => {
 
     // add a listener to 'message' channel
     global.ipcRenderer.addListener('message', handleMessage)
+    global.ipcRenderer.addListener('url-change', onUrlChangedByApp)
 
     return () => {
       global.ipcRenderer.removeListener('message', handleMessage)
+      global.ipcRenderer.removeListener('url-change', onUrlChangedByApp)
     }
   }, [])
 
@@ -19,13 +21,25 @@ const IndexPage = () => {
   }
 
   const onUrlChange = (e) => {
-    if(e.keyCode == 13) global.ipcRenderer.send('urlChange', e.target.value)
+    setUrlState(e.target.value)
+    console.log(e);
+    /*if(e.keyCode == 13) */ //global.ipcRenderer.send('url-change', e.target.value)
+  }
+
+  const onUrlSubmit = (e) => {
+    if(e.key == "Enter") global.ipcRenderer.send('url-change', e.target.value)
+  }
+  const [urlState, setUrlState] = useState("初期値");
+  let url_input = <input id="url" type="text" onChange={onUrlChange} onKeyDown={onUrlSubmit} value={urlState}></input>
+  const onUrlChangedByApp = (_e, msg) => {
+    console.log(msg);
+    setUrlState(msg);
   }
 
   return (
     <Layout title="Home | Next.js + TypeScript + Electron Example">
       <div id="bar">
-        <input id="url" type="text" onKeyDown={onUrlChange}></input>
+        {url_input}
       </div>
     </Layout>
   )
